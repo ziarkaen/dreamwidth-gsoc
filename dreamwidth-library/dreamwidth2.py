@@ -33,10 +33,11 @@ class DreamWidthSite(xmlrpclib.ServerProxy):
 		self.username = username
 		self.password = password
 		
-	def call(self, function_name, data={}):
+	def call(self, short_function_name, data={}):
 		"""
 		Will handle all authentication - acts as layer between raw XML-RPC calls.  Always use protection.
 		"""
+		function_name = "LJ.XMLRPC." + short_function_name
 		if not hasattr(self, function_name):
 			raise Exception, "No such function: " + function_name
 		info = self.authenticate()
@@ -78,7 +79,7 @@ class DreamWidthSite(xmlrpclib.ServerProxy):
 		if usejournal:
 			data['usejournal'] = usejournal
 		# use self.call to auth/execute routine
-		return self.call('LJ.XMLRPC.postevent', data)
+		return self.call('postevent', data)
 	
 	def GetEvents(self):
 		"""
@@ -89,8 +90,8 @@ class DreamWidthSite(xmlrpclib.ServerProxy):
 def main():
 	site = DreamWidthSite(site_url + "/interface/xmlrpc")
 	site.identify("dreamhackuser", "khan777")
-	print site.call("LJ.XMLRPC.getfriends")
-	print site.call("LJ.XMLRPC.getdaycounts")
+	print site.call("getfriends")
+	print site.call("getdaycounts")
 	#print site.PostEvent('New function', 'This is sent from a convenience function: who wants to use the raw routines?')
 	return 0
 
